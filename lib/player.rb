@@ -1,16 +1,23 @@
 # ------------- Player ---------------------
 class Player
   attr_accessor :name, :life_points
+  @@enemies = []
 
   # Initialisation of the infos of each players
   def initialize(name)
     @name = name
     @life_points = 10
+    @@enemies << self
+  end
+
+  def self.all_enemies
+    @@enemies
   end
 
   # Initialisation of the status of health of each players
   def show_state
     print "#{@name} à #{@life_points} points de vie." if @life_points > 0
+    print "#{@name} est mort" if @life_points <= 0
   end
 
   # Script who implement and store the damage of each players
@@ -39,6 +46,7 @@ class HumanPlayer < Player
 
   # Initialisation of the new info of player
   def initialize(name)
+    @name = name
     @life_points = 100
     @weapon_level = 1
   end
@@ -74,14 +82,21 @@ class HumanPlayer < Player
       puts "Tu n'as rien trouvé"
 
     elsif dice >= 2 and dice <= 5
-      @life_points += 50
+      if @life_points == 100
+        @life_points = 100
+      elsif (50 + @life_points) >= 100
+        @life_points = 100
+      elsif (50 + life_points) < 100
+        @life_points += 50
+      end
       puts "Bravo, tu as trouvé un pack de +50 points de vie !"
 
     elsif dice == 6
-      max = 100 - @life_points
-      if max > 20
-        @life_points += 80 - (80 - max)
-      else
+      if @life_points == 100
+        @life_points = 100
+      elsif (80 + @life_points) >= 100
+        @life_points = 100
+      elsif (80 + @life_points) < 100
         @life_points += 80
       end
       puts "Waow, tu as trouvé un pack de +80 points de vie !"
